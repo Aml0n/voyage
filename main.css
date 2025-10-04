@@ -37,6 +37,24 @@ div#wrapper {
 #events {
     grid-column: 1 / 2;
     grid-row: 1 / 2;
+    padding-right: 100px;
+    width: auto;
+}
+
+.event {
+    padding-bottom: 20px;
+    width: 60%;
+}
+
+.option {
+    padding-bottom: 10px;
+    text-decoration: underline;
+    color: rgb(79, 79, 79);
+}
+
+.player {
+    margin-left: auto;
+    text-align: right;
 }
 
 #stats{
