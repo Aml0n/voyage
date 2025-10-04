@@ -1,0 +1,64 @@
+html, body {
+    padding: 0;
+    margin: 0;
+} 
+
+nav {
+    display: flex;
+    margin: 10px 15px 0 15px;
+    padding: 0;
+    height: 20px;
+}
+
+p.github-link {
+    align-self: right;
+    margin-left: auto;
+}
+
+main {
+    margin: 0;
+    padding: 10px 20% 0px;
+}
+
+#status {
+    margin-bottom: 10px;
+}
+
+nav p {
+    margin: 0;
+}
+
+div#wrapper {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    grid-template-rows: auto;
+}
+
+#events {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+#stats{
+    width: 150px;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+#stats >div {
+    margin-bottom: 10px;
+}
+
+div.stat {
+    width: inherit;
+    display: flex;
+}
+
+span.statNum{
+    text-align: right;
+    margin-left: auto;
+}
+
+#status {
+    font-weight: 700;
+}
