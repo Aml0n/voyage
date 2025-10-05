@@ -1,4 +1,4 @@
-import { createOptions, createEvent, controller, signal } from "./scripts/eventsManager.js";
+import { createOptions, createEvent, ControllerManager } from "./scripts/eventsManager.js";
 import { Events } from "./scripts/events.js";
 import { PlayerStats } from "./scripts/playerStats.js";
 
@@ -34,6 +34,7 @@ function eventBegin(evnt) {
 
     createEvent(evnt.text);
 
+    
     if (evnt.textOnly === false) {
         setTimeout(() => createOptions(evnt.options), 3000);
     };

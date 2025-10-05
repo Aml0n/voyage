@@ -1,9 +1,35 @@
 import { PlayerStats } from "./playerStats.js";
 
-export const controller = new AbortController();
-export const signal = controller.signal;
+// Controller manager to handle reusable controllers
+export const ControllerManager = {
+    currentController: null,
+    
+    getController() {
+        if (!this.currentController || this.currentController.signal.aborted) {
+            this.currentController = new AbortController();
+        }
+        return this.currentController;
+    },
+    
+    getSignal() {
+        return this.getController().signal;
+    },
+    
+    abort() {
+        if (this.currentController) {
+            this.currentController.abort();
+        }
+    },
+    
+    reset() {
+        this.currentController = new AbortController();
+        return this.currentController;
+    }
+};
 
 export function createOptions(opts) {
+
+    ControllerManager.getController();
 
     const options = document.createElement("div");
     options.classList.add('event', 'options', 'player');
@@ -39,7 +65,7 @@ export function createOptions(opts) {
         if (optClickable === false) {
             tempOpt.classList.add('unclickable');
         } else {
-            tempOpt.addEventListener('click', () => optionOnClick(tempOpt, opts[opt]), signal);
+            tempOpt.addEventListener('click', () => optionOnClick(tempOpt, opts[opt]), ControllerManager.getSignal());
         }
 
         options.appendChild(tempOpt);
@@ -54,7 +80,7 @@ export function optionOnClick(opt, optData) {
     // optData is a class!
 
     // const optionElements = opt.parentNode.children;
-    controller.abort();
+    ControllerManager.abort();
     
     // console.log("this should only print once!")
 
