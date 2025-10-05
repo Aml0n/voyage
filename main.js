@@ -35,8 +35,20 @@ function eventBegin(evnt) {
     createEvent(evnt);
 
     if (evnt.textOnly === false) {
-        setTimeout(() => createOptions(evnt.options), 3000);
+        setTimeout(() => {
+            createOptions(evnt.options)
+            setTimeout(() => {
+                createContinueButton();
+            }, 1000);
+        }, 3000);
+    } else {
+        
+        setTimeout(() => {
+            createContinueButton();    
+        }, 1000);
     };
+
+    
 
 };
 

@@ -51,13 +51,15 @@ div.event div.statChange {
     margin-top: 5px;
 }
 
-.option {
+.option,
+.clickable {
     padding-bottom: 10px;
     text-decoration: underline;
     color: rgb(79, 79, 79);
 }
 
-.option:hover {
+.option:hover,
+.clickable:hover {
     font-style: italic;
     cursor: pointer;
 }

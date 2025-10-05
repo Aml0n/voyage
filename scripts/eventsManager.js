@@ -27,6 +27,16 @@ export const ControllerManager = {
     }
 };
 
+export function createContinueButton() {
+    const continueDiv = document.createElement('div');
+    continueDiv.classList.add('continue', 'player', 'clickable');
+    continueDiv.textContent = "continue..."
+    continueDiv.addEventListener('click', () => {
+        return
+    });
+    events.appendChild(continueDiv);
+}
+
 export function createOptions(opts) {
 
     ControllerManager.getController();
@@ -131,10 +141,18 @@ export function optionOnClick(opt, optData) {
                 }
 
                 effectDiv.appendChild(statDiv);
-                
-                // TODO: add "continue" button
+
+                setTimeout(() => {
+                    createContinueButton();
+                }, delay);
+
+            }, delay);
+        } else {
+            setTimeout(() => {
+                createContinueButton();
             }, delay);
         }
+
     }, delay);
 
     // TODO: add "continue" button
