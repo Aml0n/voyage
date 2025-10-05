@@ -30,15 +30,43 @@ const eventList = [];
 
 // events.replaceChildren();
 
-function eventBegin(evnt) {
+const Game = {
+    roundBegin: function() {
+        let loopConsume = setInterval(() => {
+            if (PlayerStats.food < 2) {
+                PlayerStats.health -= 4;
+            } else {
+                PlayerStats.food -= 2;
+            };
+            
+            if (PlayerStats.water < 2) {
+                PlayerStats.health -= 4;
+            } else {
+                PlayerStats.water -= 2;
+            }
 
-    createEvent(evnt);
+            console.log(`${PlayerStats.food}, ${PlayerStats.water}, ${PlayerStats.health}`)
+            PlayerStats.updateStats(["food", "health", "water"])
+        }, 1000)
 
-    if (evnt.textOnly === false) {
         setTimeout(() => {
-            createOptions(evnt.options)
-        }, 3000);
-    };
-};
+            clearInterval(loopConsume);
+            this.eventBegin(Events.dehydratedMan);
+        }, 10000)
 
-eventBegin(Events.dehydratedMan);
+    },
+
+    eventBegin: function(evnt) {
+        createEvent(evnt);
+
+        if (evnt.textOnly === false) {
+            setTimeout(() => {
+                createOptions(evnt.options)
+            }, 3000);
+        };
+
+    }
+}
+
+Game.roundBegin();
+// Game.eventBegin(Events.dehydratedMan);
