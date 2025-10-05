@@ -1,6 +1,7 @@
 export const Events = {
     
     dehydratedMan: {
+        journeyText: "a stranded man.",
         text: "you see a man on the side of the road. his caravan is on its side and without a horse. he doesn't look good.",
         // Indicates if this event should display only text without options
         textOnly: false,

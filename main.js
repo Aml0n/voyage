@@ -1,9 +1,11 @@
 import { createOptions, createEvent, OptionControllerManager, ContinueControllerManager } from "./scripts/eventsManager.js";
 import { Events } from "./scripts/events.js";
 import { PlayerStats } from "./scripts/playerStats.js";
+import { TravelDescriptions } from "./scripts/travelDescriptions.js";
 
 const events = document.querySelector('#events')
 const eventList = [];
+const journeyStatus = document.querySelector('#status')
 
 // * Initial testing code
 // 
@@ -30,8 +32,20 @@ const eventList = [];
 
 // events.replaceChildren();
 
+function replaceFirstTwoChar(string, charToReplace, replacementChar) {
+    const firstString = string.replace(charToReplace, replacementChar);
+    return firstString.replace(charToReplace, replacementChar);
+};
+
 const Game = {
     roundBegin: function() {
+        journeyStatus.textContent += " [____________________]"
+
+        const travelDescription = document.createElement('div');
+        travelDescription.classList.add('event');
+        travelDescription.textContent = TravelDescriptions[Math.floor((Math.random() * TravelDescriptions.length))]
+        events.appendChild(travelDescription);
+
         let loopConsume = setInterval(() => {
             if (PlayerStats.food < 2) {
                 PlayerStats.health -= 3;
@@ -47,9 +61,10 @@ const Game = {
             PlayerStats.days += 1;
             PlayerStats.km += 20;
             // console.log(`${PlayerStats.food}, ${PlayerStats.water}, ${PlayerStats.health}`)
-            PlayerStats.updateStats(["food", "health", "water", "days", "km"])
+            PlayerStats.updateStats(["food", "health", "water", "days", "km"]);
+            journeyStatus.textContent = replaceFirstTwoChar(journeyStatus.textContent, "_", "#");
         }, 1000)
-
+        
         setTimeout(() => {
             clearInterval(loopConsume);
             this.eventBegin(Events.dehydratedMan);
@@ -58,6 +73,8 @@ const Game = {
     },
 
     eventBegin: function(evnt) {
+
+        journeyStatus.textContent = evnt.journeyText
         createEvent(evnt);
 
         if (evnt.textOnly === false) {
