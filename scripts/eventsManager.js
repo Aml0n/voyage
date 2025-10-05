@@ -1,4 +1,5 @@
 import { PlayerStats } from "./playerStats.js";
+import { Game } from "../main.js";
 
 // Controller manager to handle reusable controllers
 export const OptionControllerManager = {
@@ -62,6 +63,7 @@ export function createContinueButton() {
     continueDiv.addEventListener('click', () => {
         events.replaceChildren();
         ContinueControllerManager.abort();
+        Game.roundBegin();
     }, ContinueControllerManager.getSignal());
     events.appendChild(continueDiv);
 }

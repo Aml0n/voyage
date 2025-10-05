@@ -37,7 +37,7 @@ function replaceFirstTwoChar(string, charToReplace, replacementChar) {
     return firstString.replace(charToReplace, replacementChar);
 };
 
-const Game = {
+export const Game = {
     roundBegin: function() {
         journeyStatus.textContent += " [____________________]"
 
