@@ -1,4 +1,4 @@
-import { createOptions, createEvent, ControllerManager } from "./scripts/eventsManager.js";
+import { createOptions, createEvent, OptionControllerManager, ContinueControllerManager } from "./scripts/eventsManager.js";
 import { Events } from "./scripts/events.js";
 import { PlayerStats } from "./scripts/playerStats.js";
 
@@ -37,15 +37,7 @@ function eventBegin(evnt) {
     if (evnt.textOnly === false) {
         setTimeout(() => {
             createOptions(evnt.options)
-            setTimeout(() => {
-                createContinueButton();
-            }, 1000);
         }, 3000);
-    } else {
-        
-        setTimeout(() => {
-            createContinueButton();    
-        }, 1000);
     };
 };
 
