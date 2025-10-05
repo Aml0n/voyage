@@ -1,16 +1,43 @@
+import { PlayerStats } from "./playerStats.js";
+
 export function createOptions(opts) {
 
     const options = document.createElement("div");
     options.classList.add('event', 'options', 'player');
 
     for (const opt in opts) {
+
+        let optClickable = true;
+
+        if (opts[opt].statusChanges.length !== 0) {
+
+            for (const change of opts[opt].statusChanges) {
+                const stat = change[0];
+                
+                if ((PlayerStats[stat] - change[1]) < 0);
+                    optClickable = false;
+            }
+        }
+
+        console.log(optClickable);
+
         let tempOpt = document.createElement('div');
-        tempOpt.textContent = opts[opt].text;
+
+        const optionText = opts[opt].text;
+        tempOpt.textContent = optionText;
+
         let optionSpecific = 'option' + (opt + 1);
         tempOpt.classList.add('option', optionSpecific);
-        options.appendChild(tempOpt);
-    } 
 
+        if (optClickable === false) {
+            tempOpt.classList.add('unclickable');
+        } else {
+            tempOpt.addEventListener('click', () => optionOnClick(opt));
+        }
+
+        options.appendChild(tempOpt);
+    }
+    
     events.appendChild(options);
 
 }

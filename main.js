@@ -1,5 +1,6 @@
 import { createOptions, createEvent } from "./scripts/eventsManager.js";
-import { Events } from "./scripts/events.js"
+import { Events } from "./scripts/events.js";
+import { PlayerStats } from "./scripts/playerStats.js";
 
 const events = document.querySelector('#events')
 const eventList = [];
@@ -14,13 +15,30 @@ const eventList = [];
 // option1.textContent = "Hello";
 
 
-let templateOptions = [
-    'take his coins',
-    'give him water',
-    'ignore him',
-    'skibidi rizz ohio gyatt'
-]
+// let templateOptions = [
+//     'take his coins',
+//     'give him water',
+//     'ignore him',
+//     'skibidi rizz ohio gyatt'
+// ]
 
 // createOptions(Events.dehydratedMan.options);
-createEvent(Events.dehydratedMan.text);
-createOptions(Events.dehydratedMan.options);
+// createEvent(Events.dehydratedMan.text);
+// createOptions(Events.dehydratedMan.options);
+
+// refreshEvents()
+
+// events.replaceChildren();
+
+function eventBegin(evnt) {
+    createEvent(evnt.text);
+    if (evnt.textOnly === false) {
+        setTimeout(() => createOptions(evnt.options), 3000);
+    }
+    if (evnt.hasStatusChanged === true) {
+        setTimeout(() => createEvent(evnt.status), 3000);
+    }
+
+}
+
+eventBegin(Events.dehydratedMan)

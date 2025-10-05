@@ -8,17 +8,24 @@ export const Events = {
             {
                 text: "take his coins",
                 effect: "he watches as you step off your caravan and rummage through his. you walk back and depart, a small fortune to be found.",
+                statusChanges: [
+                    ["coins", 25]
+                ]
             },
             {
                 text: 'give him water',
-                effect: "you rummage through your caravan and find a small container of water. the man, now with a smile on his face, greets you in a different language as he pulls out an abundance of coins from his pockets."
+                effect: "you rummage through your caravan and find a small container of water. the man, now with a smile on his face, greets you in a different language as he pulls out an abundance of coins from his pockets.",
+                statusChanges: [
+                    ["coins", 75],
+                    ["water", -8]
+                ]
             },
             {
                 text: 'ignore him',
-                effect: "you continue on your way. after a quiet period of time, you look behind you. just a dot in the distance."
+                effect: "you continue on your way. after a quiet period of time, you look behind you. just a dot in the distance.",
+                statusChanges: [] // No changes
             }   
         ],
-        hasStatusChanged: false,
-        status: null
+        statusChanges: []
     }
 }
