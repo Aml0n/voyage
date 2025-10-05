@@ -34,12 +34,10 @@ function eventBegin(evnt) {
 
     createEvent(evnt);
 
-
     if (evnt.textOnly === false) {
         setTimeout(() => createOptions(evnt.options), 3000);
     };
 
-    // TODO: make status change work
 };
 
 eventBegin(Events.dehydratedMan);

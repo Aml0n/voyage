@@ -87,54 +87,56 @@ export function optionOnClick(opt, optData) {
     const optionParent = opt.parentNode;
     optionParent.remove();
 
+    const delay = 1500;
+
     const playerDiv = document.createElement('div');
     playerDiv.textContent = opt.textContent + ".";
     playerDiv.classList.add('player', 'event');
     events.appendChild(playerDiv);
 
-    const effect = optData.effect;
+    setTimeout(() => {
 
-    const effectDiv = document.createElement("div");
-    effectDiv.textContent = typeof effect === "string" ? effect : JSON.stringify(effect);
-    // console.log(effect);
-    effectDiv.classList.add('event');
-    events.appendChild(effectDiv);
+        const effect = optData.effect;
+        const effectDiv = document.createElement("div");
+        effectDiv.textContent = typeof effect === "string" ? effect : JSON.stringify(effect);
+        effectDiv.classList.add('event');
+        events.appendChild(effectDiv);
 
-    const statusChanges = optData.statusChanges
+        const statusChanges = optData.statusChanges;
 
-    if (statusChanges.length === 0) {
-        return;
+        if (statusChanges.length > 0) {
 
-    }
+            setTimeout(() => {
 
-    const statDiv = document.createElement('div');
-    statDiv.classList.add('statChange')
-    
-    for (let change of statusChanges) {
-        const stat = change[0];
-        const changeValue = change[1];
-        
-        let statNumChange;
+                const statDiv = document.createElement('div');
+                statDiv.classList.add('statChange');
+                
+                for (let change of statusChanges) {
+                    const stat = change[0];
+                    const changeValue = change[1];
+                    
+                    let statNumChange;
 
-        if (changeValue > 0) {
-            statNumChange = `↑${changeValue}`;
+                    if (changeValue > 0) {
+                        statNumChange = `↑${changeValue}`;
+                    } else if (changeValue < 0) {
+                        statNumChange = `↓${Math.abs(changeValue)}`;
+                    } else {
+                        statNumChange = "0";
+                    }
 
-        } else if (changeValue < 0) {
-            statNumChange = `↓${Math.abs(changeValue)}`;
+                    statDiv.textContent += `${stat} ${statNumChange}. `;
+                    
+                    PlayerStats[stat] += changeValue;
+                }
 
-        } else {
-            statNumChange = "0";
-
+                effectDiv.appendChild(statDiv);
+                
+                // TODO: add "continue" button
+            }, delay);
         }
+    }, delay);
 
-        statDiv.textContent += `${stat} ${statNumChange}. `;
-    }
-    // console.log(statDiv.textContent);
-
-
-    effectDiv.appendChild(statDiv);
-
-    // TODO: make things appear one-after-another
     // TODO: add "continue" button
 }
 
