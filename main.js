@@ -32,15 +32,11 @@ const eventList = [];
 
 function eventBegin(evnt) {
 
-    createEvent(evnt.text);
+    createEvent(evnt);
 
-    
+
     if (evnt.textOnly === false) {
         setTimeout(() => createOptions(evnt.options), 3000);
-    };
-    
-    if (evnt.hasStatusChanged === true) {
-        setTimeout(() => createEvent(evnt.status), 3000);
     };
 
     // TODO: make status change work

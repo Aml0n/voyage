@@ -135,11 +135,42 @@ export function optionOnClick(opt, optData) {
     effectDiv.appendChild(statDiv);
 
     // TODO: make things appear one-after-another
+    // TODO: add "continue" button
 }
 
-export function createEvent(eventText) {
+export function createEvent(event) {
     const tempEvent = document.createElement('div');
     tempEvent.classList.add('event');
-    tempEvent.textContent = eventText;
+    tempEvent.textContent = event.text;
     events.appendChild(tempEvent);
+
+    if (event.statusChanges.length > 0) {
+        setTimeout(() => {
+            const statusChangesDiv = document.createElement('div');
+            statusChangesDiv.classList.add('statChange')
+            
+            for (let change of event.statusChanges) {
+                const stat = change[0];
+                const changeValue = change[1];
+                
+                let statNumChange;
+
+                if (changeValue > 0) {
+                    statNumChange = `↑${changeValue}`;
+
+                } else if (changeValue < 0) {
+                    statNumChange = `↓${Math.abs(changeValue)}`;
+
+                } else {
+                    statNumChange = "0";
+
+                }
+
+                statusChangesDiv.textContent += `${stat} ${statNumChange}. `;
+            }
+
+            tempEvent.appendChild(statusChangesDiv);
+            
+        }, 3000);
+    };
 }

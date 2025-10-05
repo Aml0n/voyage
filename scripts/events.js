@@ -27,5 +27,15 @@ export const Events = {
             }   
         ],
         statusChanges: []
+    },
+
+    droppedWater: {
+        text: "you slowly take a small sip of water. the bumpy journey swipes your canteen and throws it overboard.",
+        textOnly: true,
+        options: [],
+        statusChanges: [
+            ["water", -10]
+        ]
+
     }
 }
