@@ -1,4 +1,4 @@
-import { createOptions, createEvent } from "./scripts/eventsManager.js";
+import { createOptions, createEvent, controller, signal } from "./scripts/eventsManager.js";
 import { Events } from "./scripts/events.js";
 import { PlayerStats } from "./scripts/playerStats.js";
 
@@ -31,14 +31,18 @@ const eventList = [];
 // events.replaceChildren();
 
 function eventBegin(evnt) {
+
     createEvent(evnt.text);
+
     if (evnt.textOnly === false) {
         setTimeout(() => createOptions(evnt.options), 3000);
-    }
+    };
+    
     if (evnt.hasStatusChanged === true) {
         setTimeout(() => createEvent(evnt.status), 3000);
-    }
+    };
 
-}
+    // TODO: make status change work
+};
 
-eventBegin(Events.dehydratedMan)
+eventBegin(Events.dehydratedMan);

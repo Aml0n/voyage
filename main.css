@@ -46,6 +46,11 @@ div#wrapper {
     width: 60%;
 }
 
+div.event div.statChange {
+    color: rgb(79, 79, 79);
+    margin-top: 5px;
+}
+
 .option {
     padding-bottom: 10px;
     text-decoration: underline;
