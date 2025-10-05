@@ -1,7 +1,7 @@
 import { createOptions, createEvent, OptionControllerManager, ContinueControllerManager } from "./scripts/eventsManager.js";
 import { Events } from "./scripts/events.js";
 import { PlayerStats } from "./scripts/playerStats.js";
-import { TravelDescriptions } from "./scripts/travelDescriptions.js";
+import { TravelDescriptions, aJourney } from "./scripts/splashText.js";
 
 const events = document.querySelector('#events')
 const eventList = [];
@@ -39,6 +39,7 @@ function replaceFirstTwoChar(string, charToReplace, replacementChar) {
 
 export const Game = {
     roundBegin: function() {
+        journeyStatus.textContent = aJourney[Math.floor((Math.random() * aJourney.length))]
         journeyStatus.textContent += " [____________________]"
 
         const travelDescription = document.createElement('div');

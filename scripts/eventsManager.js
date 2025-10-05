@@ -169,6 +169,7 @@ export function optionOnClick(opt, optData) {
                     statDiv.textContent += `${stat} ${statNumChange}. `;
                     
                     PlayerStats[stat] += changeValue;
+                    PlayerStats.updateStats(stat);
                     console.log(PlayerStats[stat])
                 }
 
