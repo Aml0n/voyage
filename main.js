@@ -1,7 +1,8 @@
-import { createOptions, createEvent } from "./scripts/events.js";
+import { createOptions, createEvent } from "./scripts/eventsManager.js";
+import { Events } from "./scripts/events.js"
 
 const events = document.querySelector('#events')
-
+const eventList = [];
 
 // * Initial testing code
 // 
@@ -20,5 +21,6 @@ let templateOptions = [
     'skibidi rizz ohio gyatt'
 ]
 
-createOptions(templateOptions);
-createEvent("hello!!!")
+// createOptions(Events.dehydratedMan.options);
+createEvent(Events.dehydratedMan.text);
+createOptions(Events.dehydratedMan.options);

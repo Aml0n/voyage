@@ -1,23 +1,24 @@
-export function createOptions(opts) {
-
-    const options = document.createElement("div");
-    options.classList.add('event', 'options', 'player');
-
-    for (const opt in opts) {
-        let tempOpt = document.createElement('div');
-        tempOpt.textContent = opts[opt];
-        let optionSpecific = 'option' + (opt + 1);
-        tempOpt.classList.add('option', optionSpecific);
-        options.appendChild(tempOpt);
-    } 
-
-    events.appendChild(options);
-
-}
-
-export function createEvent(eventText) {
-    const tempEvent = document.createElement('div');
-    tempEvent.classList.add('event');
-    tempEvent.textContent = eventText;
-    events.appendChild(tempEvent);
+export const Events = {
+    
+    dehydratedMan: {
+        text: "you see a man on the side of the road. his caravan is on its side and without a horse. he doesn't look good.",
+        // Indicates if this event should display only text without options
+        textOnly: false,
+        options: [
+            {
+                text: "take his coins",
+                effect: "he watches as you step off your caravan and rummage through his. you walk back and depart, a small fortune to be found.",
+            },
+            {
+                text: 'give him water',
+                effect: "you rummage through your caravan and find a small container of water. the man, now with a smile on his face, greets you in a different language as he pulls out an abundance of coins from his pockets."
+            },
+            {
+                text: 'ignore him',
+                effect: "you continue on your way. after a quiet period of time, you look behind you. just a dot in the distance."
+            }   
+        ],
+        hasStatusChanged: false,
+        status: null
+    }
 }
