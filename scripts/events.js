@@ -14,3 +14,10 @@ export function createOptions(opts) {
     events.appendChild(options);
 
 }
+
+export function createEvent(eventText) {
+    const tempEvent = document.createElement('div');
+    tempEvent.classList.add('event');
+    tempEvent.textContent = eventText;
+    events.appendChild(tempEvent);
+}

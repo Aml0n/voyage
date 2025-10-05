@@ -1,4 +1,4 @@
-import { createOptions } from "./scripts/events.js";
+import { createOptions, createEvent } from "./scripts/events.js";
 
 const events = document.querySelector('#events')
 
@@ -21,3 +21,4 @@ let templateOptions = [
 ]
 
 createOptions(templateOptions);
+createEvent("hello!!!")
