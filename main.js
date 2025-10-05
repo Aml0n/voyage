@@ -34,7 +34,7 @@ const Game = {
     roundBegin: function() {
         let loopConsume = setInterval(() => {
             if (PlayerStats.food < 2) {
-                PlayerStats.health -= 4;
+                PlayerStats.health -= 3;
             } else {
                 PlayerStats.food -= 2;
             };
@@ -44,9 +44,10 @@ const Game = {
             } else {
                 PlayerStats.water -= 2;
             }
-
-            console.log(`${PlayerStats.food}, ${PlayerStats.water}, ${PlayerStats.health}`)
-            PlayerStats.updateStats(["food", "health", "water"])
+            PlayerStats.days += 1;
+            PlayerStats.km += 20;
+            // console.log(`${PlayerStats.food}, ${PlayerStats.water}, ${PlayerStats.health}`)
+            PlayerStats.updateStats(["food", "health", "water", "days", "km"])
         }, 1000)
 
         setTimeout(() => {
