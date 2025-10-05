@@ -52,6 +52,15 @@ div#wrapper {
     color: rgb(79, 79, 79);
 }
 
+.option:hover {
+    font-style: italic;
+    cursor: pointer;
+}
+
+.option.unclickable {
+    text-decoration: line-through;
+}
+
 .player {
     margin-left: auto;
     text-align: right;
