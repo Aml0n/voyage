@@ -61,6 +61,11 @@ div#wrapper {
     text-decoration: line-through;
 }
 
+.option.unclickable:hover {
+    cursor: default;
+    font-style: normal;
+}
+
 .player {
     margin-left: auto;
     text-align: right;

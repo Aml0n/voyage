@@ -14,8 +14,12 @@ export function createOptions(opts) {
             for (const change of opts[opt].statusChanges) {
                 const stat = change[0];
                 
-                if ((PlayerStats[stat] - change[1]) < 0);
+                console.log(PlayerStats[stat] + change[1])
+                
+                if ((PlayerStats[stat] + change[1]) < 0) {
                     optClickable = false;
+                    break
+                }
             }
         }
 
