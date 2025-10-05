@@ -10,4 +10,7 @@ export const PlayerStats = {
     paper: 0,
     silk: 0,
     weight: 0
+
+    // TODO: make method for changing stats
+    // input: statusChanges array
 }

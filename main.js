@@ -47,9 +47,6 @@ function eventBegin(evnt) {
             createContinueButton();    
         }, 1000);
     };
-
-    
-
 };
 
 eventBegin(Events.dehydratedMan);

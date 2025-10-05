@@ -32,7 +32,7 @@ export function createContinueButton() {
     continueDiv.classList.add('continue', 'player', 'clickable');
     continueDiv.textContent = "continue..."
     continueDiv.addEventListener('click', () => {
-        return
+        events.replaceChildren();
     });
     events.appendChild(continueDiv);
 }
@@ -53,7 +53,7 @@ export function createOptions(opts) {
             for (const change of opts[opt].statusChanges) {
                 const stat = change[0];
                 
-                console.log(PlayerStats[stat] + change[1])
+                // console.log(PlayerStats[stat] + change[1])
 
                 if ((PlayerStats[stat] + change[1]) < 0) {
                     optClickable = false;
@@ -62,7 +62,7 @@ export function createOptions(opts) {
             }
         }
 
-        console.log(optClickable);
+        // console.log(optClickable);
 
         const tempOpt = document.createElement('div');
 
@@ -140,6 +140,7 @@ export function optionOnClick(opt, optData) {
                     PlayerStats[stat] += changeValue;
                 }
 
+                
                 effectDiv.appendChild(statDiv);
 
                 setTimeout(() => {
@@ -154,8 +155,6 @@ export function optionOnClick(opt, optData) {
         }
 
     }, delay);
-
-    // TODO: add "continue" button
 }
 
 export function createEvent(event) {
