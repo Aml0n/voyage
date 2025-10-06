@@ -75,6 +75,9 @@ export function createOptions(opts) {
     const options = document.createElement("div");
     options.classList.add('event', 'options', 'player');
 
+    let totalOptions = 0;   
+    let totalUnclickables = 0;
+
     for (const opt in opts) {
 
         let optClickable = true;
@@ -105,15 +108,50 @@ export function createOptions(opts) {
 
         if (optClickable === false) {
             tempOpt.classList.add('unclickable');
+            totalUnclickables += 1;
         } else {
             tempOpt.addEventListener('click', () => optionOnClick(tempOpt, opts[opt]), OptionControllerManager.getSignal());
         }
 
         options.appendChild(tempOpt);
+        totalOptions += 1;
     }
     
-    events.appendChild(options);
+    if (totalOptions === totalUnclickables) {
+        const skip = document.createElement('div');
+        skip.classList.add('option')
+        optionis.appendChild(skip);
+        skip.addEventListener('click', () => skipEvent(skip), OptionControllerManager.getSignal())
+    }
 
+    events.appendChild(options);
+}
+
+export function skipEvent(skip) {
+    OptionControllerManager.abort();
+
+    const optionParent = opt.parentNode;
+    optionParent.remove();
+
+    const delay = 1500;
+
+    const playerDiv = document.createElement('div');
+    playerDiv.textContent = opt.textContent + ".";
+    playerDiv.classList.add('player', 'event');
+    events.appendChild(playerDiv);
+
+    const effectDiv = document.createElement('div');
+    effectDiv.textContent = "you somehow skip this interaction because jersev is a lazy dev and needs to do homework. :)"
+    effectDiv.classList.add('event');
+
+    setTimeout(() => {
+        events.appendChild(effectDiv);
+
+        setTimeout(() => {
+            createContinueButton();
+        }, delay);  
+
+    }, delay); 
 }
 
 export function optionOnClick(opt, optData) {
