@@ -1,0 +1,107 @@
+html, body {
+    padding: 0;
+    margin: 0;
+} 
+
+nav {
+    display: flex;
+    margin: 10px 15px 0 15px;
+    padding: 0;
+    height: 20px;
+}
+
+p.github-link {
+    align-self: right;
+    margin-left: auto;
+}
+
+main {
+    margin: 0;
+    padding: 10px 20% 0px;
+}
+
+#status {
+    margin-bottom: 10px;
+}
+
+nav p {
+    margin: 0;
+}
+
+div#wrapper {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    grid-template-rows: auto;
+}
+
+#events {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    padding-right: 100px;
+    width: auto;
+}
+
+.event {
+    padding-bottom: 20px;
+    width: 60%;
+}
+
+div.event div.statChange {
+    color: rgb(79, 79, 79);
+    margin-top: 5px;
+}
+
+.option,
+.clickable {
+    padding-bottom: 10px;
+    text-decoration: underline;
+    color: rgb(79, 79, 79);
+}
+
+.option:hover,
+.clickable:hover {
+    font-style: italic;
+    cursor: pointer;
+}
+
+.option.unclickable {
+    text-decoration: line-through;
+}
+
+.option.unclickable:hover {
+    cursor: default;
+    font-style: normal;
+}
+
+.player {
+    margin-left: auto;
+    text-align: right;
+}
+
+#stats{
+    width: 150px;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+#stats >div {
+    margin-bottom: 10px;
+}
+
+div.stat {
+    width: inherit;
+    display: flex;
+}
+
+span.statNum{
+    text-align: right;
+    margin-left: auto;
+}
+
+#status {
+    font-weight: 700;
+}
+
+a {
+    color: inherit;
+}
