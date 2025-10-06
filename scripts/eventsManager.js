@@ -170,7 +170,7 @@ export function optionOnClick(opt, optData) {
                     
                     PlayerStats[stat] += changeValue;
                     PlayerStats.updateStats(stat);
-                    console.log(PlayerStats[stat])
+                    // console.log(PlayerStats[stat])
                 }
 
 
@@ -219,6 +219,9 @@ export function createEvent(event) {
                 }
 
                 statusChangesDiv.textContent += `${stat} ${statNumChange}. `;
+
+                PlayerStats[stat] += changeValue;
+                PlayerStats.updateStats(stat);
             }
 
             tempEvent.appendChild(statusChangesDiv);

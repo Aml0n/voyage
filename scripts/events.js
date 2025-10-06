@@ -24,7 +24,7 @@ export const Events = {
             {
                 text: 'ignore him',
                 effect: "you continue on your way. after a quiet period of time, you look behind you. just a dot in the distance.",
-                statusChanges: [] // No changes
+                statusChanges: [] 
             }   
         ],
         statusChanges: []
@@ -104,5 +104,42 @@ export const Events = {
         statusChanges: []
     },
 
-    
+    foodMan: {
+        journeyText: "a world-renowned chef.",
+        text: "you smell savory scents in the dry wind. a woman cooking food over her campfire.",
+        textOnly: false,
+        options: [
+            {
+                text: 'offer 20 coins',
+                effect: `she smiles. you drop the money on a log and she hands you many weeks' worth of food.`,
+                statusChanges: [
+                    ['food', 70],
+                    ['coins', -20]
+                ]
+            },
+            {
+                text: 'ask for some food',
+                effect: `she shakes her head. you pull out 20 coins to no avail. you hand an extra ten and walk off with days' worth of food.`,
+                statusChanges: [
+                    ['food', 50],
+                    ['coins', -30]
+                ]
+            },
+            {
+                text: 'steal some food',
+                effect: `you snatch some and run back to your caravan. the chef launches a nearby rock and it hits your lower back. you leave without food.`,
+                statusChanges: [
+                    ['health', -15]
+                ]
+            },
+            {
+                text: 'no thanks',
+                effect: `she smiles and waves. you hear the crackling of the campfire as you drive off.`,
+                statusChanges: []
+            }
+        ],
+        statusChanges: []
+    },
+
+
 }

@@ -98,7 +98,6 @@ export const Game = {
                 } else {
                     clearInterval(loopConsume);
                     const randNum = Math.floor(Math.random() * eventKeys.length);
-                    console.log(randNum)
                     this.eventBegin(Events[eventKeys[randNum]]);  
                 }
             }, 10000)
