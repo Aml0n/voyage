@@ -51,7 +51,7 @@ export const Game = {
 
 
     roundBegin: function() {
-        if (PlayerStats.km >= 4000) {
+        if (PlayerStats.km >= 2000) {
             Game.state = "win"
             this.gameWin();
         } else {
@@ -88,7 +88,7 @@ export const Game = {
                     clearInterval(loopConsume);
                     clearTimeout(loopEnder);
                 }
-            }, 1000)
+            }, 500)
             
             let loopEnder = setTimeout(() => {
                 if (this.state === "loss") {
@@ -100,7 +100,7 @@ export const Game = {
                     const randNum = Math.floor(Math.random() * eventKeys.length);
                     this.eventBegin(Events[eventKeys[randNum]]);  
                 }
-            }, 10000)
+            }, 5200)
         }
 
         

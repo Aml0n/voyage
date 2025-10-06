@@ -120,7 +120,7 @@ export function createOptions(opts) {
     if (totalOptions === totalUnclickables) {
         const skip = document.createElement('div');
         skip.classList.add('option')
-        optionis.appendChild(skip);
+        options.appendChild(skip);
         skip.addEventListener('click', () => skipEvent(skip), OptionControllerManager.getSignal())
     }
 
