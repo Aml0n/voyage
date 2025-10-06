@@ -4,7 +4,7 @@ export const TravelDescriptions = [
     "you look up. gaze at the vast nothing.",
     "the sun beats down like an agressive hug.",
     "nothing much else.",
-    `a song in your head. "...under my okole for a chair..."`,
+    `a song in your head. "it's aloha friday..." what could it mean?`,
     "no work 'till monday.",
     "you see tents. animals grazing. or do you?",
     "large mountain ranges reach for the sky."

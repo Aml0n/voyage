@@ -1,6 +1,6 @@
 export const PlayerStats = {
     days: 0,
-    health: 100,
+    health: 0,
     km: 0,
     coins: 75,
     speed: 10.0,

@@ -2,11 +2,19 @@ import { createOptions, createEvent, OptionControllerManager, ContinueController
 import { Events } from "./scripts/events.js";
 import { PlayerStats } from "./scripts/playerStats.js";
 import { TravelDescriptions, aJourney } from "./scripts/splashText.js";
+import { GameLossText } from "./scripts/gameOverText.js";
 
 const events = document.querySelector('#events')
 const eventList = [];
 const journeyStatus = document.querySelector('#status')
 
+const eventKeys = Object.keys(Events);
+
+const gameOverDiv1 = document.createElement('div');
+const gameOverDiv2 = document.createElement('div');
+const gameOverDiv3 = document.createElement('div');
+
+const gameOverDivs = [gameOverDiv1, gameOverDiv2, gameOverDiv3]
 // * Initial testing code
 // 
 
@@ -38,6 +46,10 @@ function replaceFirstTwoChar(string, charToReplace, replacementChar) {
 };
 
 export const Game = {
+
+    state: null,
+
+
     roundBegin: function() {
         journeyStatus.textContent = aJourney[Math.floor((Math.random() * aJourney.length))]
         journeyStatus.textContent += " [____________________]"
@@ -48,6 +60,7 @@ export const Game = {
         events.appendChild(travelDescription);
 
         let loopConsume = setInterval(() => {
+
             if (PlayerStats.food < 2) {
                 PlayerStats.health -= 3;
             } else {
@@ -64,11 +77,27 @@ export const Game = {
             // console.log(`${PlayerStats.food}, ${PlayerStats.water}, ${PlayerStats.health}`)
             PlayerStats.updateStats(["food", "health", "water", "days", "km"]);
             journeyStatus.textContent = replaceFirstTwoChar(journeyStatus.textContent, "_", "#");
+
+            if (PlayerStats.health <= 0) {
+                this.state = "loss";
+                this.gameLost();
+                clearInterval(loopConsume);
+                clearTimeout(loopEnder);
+            }
         }, 1000)
         
-        setTimeout(() => {
-            clearInterval(loopConsume);
-            this.eventBegin(Events.dehydratedMan);
+        let loopEnder = setTimeout(() => {
+            if (this.state === "loss") {
+                this.gameLost();
+            } if (this.state === "win") {
+                this.gameWin();
+            } else {
+                clearInterval(loopConsume);
+                const randNum = Math.floor(Math.random() * eventKeys.length);
+                console.log(randNum)
+                this.eventBegin(Events[eventKeys[randNum]]);  
+            }
+            
         }, 10000)
 
     },
@@ -83,6 +112,49 @@ export const Game = {
                 createOptions(evnt.options)
             }, 3000);
         };
+
+    },
+
+    gameLost: function() {
+        let divNumber = 0;
+        for (let div of gameOverDivs) {
+            div.classList.add('event');
+            div.textContent = GameLossText[divNumber];
+            divNumber += 1; 
+        }
+
+        let whichDiv = 0;
+        journeyStatus.textContent = "an end.";
+        events.replaceChildren();
+        const continueDiv = document.createElement('div');
+        continueDiv.classList.add('continue', 'player', 'clickable');
+        continueDiv.textContent = "continue..."
+        continueDiv.addEventListener('click', () => {
+            events.appendChild(gameOverDivs[whichDiv]);
+            events.removeChild(continueDiv);
+            whichDiv += 1;
+            if (whichDiv === 3) {
+                ContinueControllerManager.abort();
+                continueDiv.textContent = "reload the page to try again...";
+                setTimeout(() => {
+                    events.appendChild(continueDiv);
+                }, 2000);
+
+            } else {
+                setTimeout(() => {
+                    events.appendChild(continueDiv);
+                }, 2000); 
+            }
+            
+        }, ContinueControllerManager.getSignal());
+        events.appendChild(gameOverDiv1);
+        whichDiv += 1;
+        setTimeout(() => {
+            events.appendChild(continueDiv);
+        }, 2000);
+    },
+
+    gameWin: function() {
 
     }
 }

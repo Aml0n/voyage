@@ -31,6 +31,7 @@ export const Events = {
     },
 
     droppedWater: {
+        journeyText: "a mild loss.",
         text: "you slowly take a small sip of water. the bumpy journey swipes your canteen and throws it overboard.",
         textOnly: true,
         options: [],
