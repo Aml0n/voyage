@@ -2,7 +2,7 @@
 there's a flourishing empire on the west end of this road and you're an eastern caravan merchant.
 
 Voyage is a minimalist text-based adventure game about a caravan merchant's voyage to the Middle East via the Silk Roads.
-Your goal as the merchant is to travel 2000 kilometres and bring as many items as possible. If you die, you lose.
+Your goal as the merchant is to travel 2000 kilometers and bring as many items as possible. If you die, you lose.
 
 The game is inspired by "A Dark Room" by Double Speak Games and "The Oregon Trail".
 
