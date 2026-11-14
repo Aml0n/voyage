@@ -1,7 +1,7 @@
 import { createOptions, createEvent, OptionControllerManager, ContinueControllerManager } from "./scripts/eventsManager.js";
 import { Events } from "./scripts/events.js";
 import { PlayerStats } from "./scripts/playerStats.js";
-import { TravelDescriptions, aJourney } from "./scripts/splashText.js";
+import { JourneyStatusHandler, TravelDescriptions, aJourney } from "./scripts/journeyStatusHandler.js";
 import { GameLossText, GameWinText } from "./scripts/gameOverText.js";
 
 const events = document.querySelector('#events')
@@ -40,14 +40,12 @@ export const Game = {
 
     state: null,
 
-
     roundBegin: function() {
         if (PlayerStats.km >= 4000) {
             Game.state = "win"
             this.gameWin();
         } else {
-            journeyStatus.textContent = aJourney[Math.floor((Math.random() * aJourney.length))]
-            journeyStatus.textContent += " [____________________]"
+            JourneyStatusHandler.initializeJourneyStatus(journeyStatus);
 
             const travelDescription = document.createElement('div');
             travelDescription.classList.add('event');
@@ -71,7 +69,7 @@ export const Game = {
                 PlayerStats.km += 20;
                 // console.log(`${PlayerStats.food}, ${PlayerStats.water}, ${PlayerStats.health}`)
                 PlayerStats.updateStats(["food", "health", "water", "days", "km"]);
-                journeyStatus.textContent = replaceFirstTwoChar(journeyStatus.textContent, "_", "#");
+                JourneyStatusHandler.updateJourneyStatus(journeyStatus);
 
                 if (PlayerStats.health <= 0) {
                     this.state = "loss";
