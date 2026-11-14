@@ -15,15 +15,6 @@ const gameOverDiv2 = document.createElement('div');
 const gameOverDiv3 = document.createElement('div');
 
 const gameOverDivs = [gameOverDiv1, gameOverDiv2, gameOverDiv3]
-// * Initial testing code
-// 
-
-// const option1 = document.querySelector(".option1");
-// const option2 = document.querySelector(".option2");
-// const option3 = document.querySelector(".option3");
-
-// option1.textContent = "Hello";
-
 
 // let templateOptions = [
 //     'take his coins',
@@ -108,14 +99,14 @@ export const Game = {
 
     },
 
-    eventBegin: function(evnt) {
+    eventBegin: function(event) {
 
-        journeyStatus.textContent = evnt.journeyText
-        createEvent(evnt);
+        journeyStatus.textContent = event.journeyText
+        createEvent(event);
 
-        if (evnt.textOnly === false) {
+        if (event.textOnly === false) {
             setTimeout(() => {
-                createOptions(evnt.options)
+                createOptions(event.options)
             }, 3000);
         };
 
@@ -201,4 +192,3 @@ export const Game = {
 }
 
 Game.roundBegin();
-// Game.eventBegin(Events.dehydratedMan);
