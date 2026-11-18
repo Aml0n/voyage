@@ -1,6 +1,8 @@
 import { PlayerStats } from "./playerStats.js";
 import { Game } from "../main.js";
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // Controller manager to handle reusable controllers
 export const OptionControllerManager = {
     currentController: null,
@@ -69,61 +71,54 @@ export function createContinueButton() {
 }
 
 export function createOptions(opts) {
+    return new Promise(resolve => {
+        OptionControllerManager.getController();
 
-    OptionControllerManager.getController();
+        const options = document.createElement("div");
+        options.classList.add('event', 'options', 'player');
 
-    const options = document.createElement("div");
-    options.classList.add('event', 'options', 'player');
+        for (const opt in opts) {
 
-    for (const opt in opts) {
+            let optClickable = true;
 
-        let optClickable = true;
+            if (opts[opt].statusChanges.length !== 0) {
 
-        if (opts[opt].statusChanges.length !== 0) {
+                for (const change of opts[opt].statusChanges) {
+                    const stat = change[0];
 
-            for (const change of opts[opt].statusChanges) {
-                const stat = change[0];
-                
-                // console.log(PlayerStats[stat] + change[1])
-
-                if ((PlayerStats[stat] + change[1]) < 0) {
-                    optClickable = false;
-                    break
+                    if ((PlayerStats[stat] + change[1]) < 0) {
+                        optClickable = false;
+                        break
+                    }
                 }
             }
+
+            const tempOpt = document.createElement('div');
+
+            const optionText = opts[opt].text;
+            tempOpt.textContent = optionText;
+
+            const optionSpecific = 'option' + (opt + 1);
+            tempOpt.classList.add('option', optionSpecific);
+
+            if (optClickable === false) {
+                tempOpt.classList.add('unclickable');
+            } else {
+                tempOpt.addEventListener('click', () => {
+                    resolve();
+                    optionOnClick(tempOpt, opts[opt]);
+                }, OptionControllerManager.getSignal());
+            }
+
+            options.appendChild(tempOpt);
         }
 
-        // console.log(optClickable);
-
-        const tempOpt = document.createElement('div');
-
-        const optionText = opts[opt].text;
-        tempOpt.textContent = optionText;
-
-        const optionSpecific = 'option' + (opt + 1);
-        tempOpt.classList.add('option', optionSpecific);
-
-        if (optClickable === false) {
-            tempOpt.classList.add('unclickable');
-        } else {
-            tempOpt.addEventListener('click', () => optionOnClick(tempOpt, opts[opt]), OptionControllerManager.getSignal());
-        }
-
-        options.appendChild(tempOpt);
-    }
-    
-    events.appendChild(options);
-
+        events.appendChild(options);
+    });
 }
 
-export function optionOnClick(opt, optData) {
-    // "opt" is an HTMLDivElement!
-    // optData is a class!
-
-    // const optionElements = opt.parentNode.children;
+export async function optionOnClick(opt, optData) {
     OptionControllerManager.abort();
-    
-    // console.log("this should only print once!")
 
     const optionParent = opt.parentNode;
     optionParent.remove();
@@ -135,98 +130,92 @@ export function optionOnClick(opt, optData) {
     playerDiv.classList.add('player', 'event');
     events.appendChild(playerDiv);
 
-    setTimeout(() => {
+    await sleep(delay);
 
-        const effect = optData.effect;
-        const effectDiv = document.createElement("div");
-        effectDiv.textContent = typeof effect === "string" ? effect : JSON.stringify(effect);
-        effectDiv.classList.add('event');
-        events.appendChild(effectDiv);
+    const effect = optData.effect;
+    const effectDiv = document.createElement("div");
+    effectDiv.textContent = typeof effect === "string" ? effect : JSON.stringify(effect);
+    effectDiv.classList.add('event');
+    events.appendChild(effectDiv);
 
-        const statusChanges = optData.statusChanges;
+    const statusChanges = optData.statusChanges;
 
-        if (statusChanges.length > 0) {
+    if (statusChanges.length > 0) {
 
-            setTimeout(() => {
+        await sleep(delay);
 
-                const statDiv = document.createElement('div');
-                statDiv.classList.add('statChange');
-                
-                for (let change of statusChanges) {
-                    const stat = change[0];
-                    const changeValue = change[1];
-                    
-                    let statNumChange;
+        const statDiv = document.createElement('div');
+        statDiv.classList.add('statChange');
+        
+        for (let change of statusChanges) {
+            const stat = change[0];
+            const changeValue = change[1];
+            
+            let statNumChange;
 
-                    if (changeValue > 0) {
-                        statNumChange = `↑${changeValue}`;
-                    } else if (changeValue < 0) {
-                        statNumChange = `↓${Math.abs(changeValue)}`;
-                    } else {
-                        statNumChange = "0";
-                    }
+            if (changeValue > 0) {
+                statNumChange = `↑${changeValue}`;
+            } else if (changeValue < 0) {
+                statNumChange = `↓${Math.abs(changeValue)}`;
+            } else {
+                statNumChange = "0";
+            }
 
-                    statDiv.textContent += `${stat} ${statNumChange}. `;
-                    
-                    PlayerStats[stat] += changeValue;
-                    PlayerStats.updateStats(stat);
-                    console.log(PlayerStats[stat])
-                }
-
-
-                effectDiv.appendChild(statDiv);
-
-                setTimeout(() => {
-                    createContinueButton();
-                }, delay);
-
-            }, delay);
-        } else {
-            setTimeout(() => {
-                createContinueButton();
-            }, delay);
+            statDiv.textContent += `${stat} ${statNumChange}. `;
+            
+            PlayerStats[stat] += changeValue;
+            PlayerStats.updateStats(stat);
+            console.log(PlayerStats[stat])
         }
 
-    }, delay);
+
+        effectDiv.appendChild(statDiv);
+
+        await sleep(delay);
+        createContinueButton();
+
+    } else {
+        await sleep(delay);
+        createContinueButton();
+    }
+
 }
 
-export function createEvent(event) {
+export async function createEvent(event) {
     const tempEvent = document.createElement('div');
     tempEvent.classList.add('event');
     tempEvent.textContent = event.text;
     events.appendChild(tempEvent);
 
     if (event.statusChanges.length > 0) {
-        setTimeout(() => {
-            const statusChangesDiv = document.createElement('div');
-            statusChangesDiv.classList.add('statChange')
+        await sleep(3000);
+
+        const statusChangesDiv = document.createElement('div');
+        statusChangesDiv.classList.add('statChange')
+        
+        for (let change of event.statusChanges) {
+            const stat = change[0];
+            const changeValue = change[1];
             
-            for (let change of event.statusChanges) {
-                const stat = change[0];
-                const changeValue = change[1];
-                
-                let statNumChange;
+            let statNumChange;
+            
+            if (changeValue > 0) {
+                statNumChange = `↑${changeValue}`;
 
-                if (changeValue > 0) {
-                    statNumChange = `↑${changeValue}`;
+            } else if (changeValue < 0) {
+                statNumChange = `↓${Math.abs(changeValue)}`;
 
-                } else if (changeValue < 0) {
-                    statNumChange = `↓${Math.abs(changeValue)}`;
+            } else {
+                statNumChange = "0";
 
-                } else {
-                    statNumChange = "0";
-
-                }
-
-                statusChangesDiv.textContent += `${stat} ${statNumChange}. `;
             }
 
-            tempEvent.appendChild(statusChangesDiv);
-            
-            setTimeout(() => {
-                createContinueButton();
-            }, 1000);
+            statusChangesDiv.textContent += `${stat} ${statNumChange}. `;
+        }
 
-        }, 3000);
+        tempEvent.appendChild(statusChangesDiv);
+        
+        await sleep(1000);
+        createContinueButton();
     };
 }

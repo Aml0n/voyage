@@ -1,4 +1,4 @@
-export class JourneyStatusHandler {
+export default class JourneyStatusHandler {
     static initializeJourneyStatus(div) {
         const rand = Math.floor((Math.random() * aJourney.length));
         div.textContent = aJourney[rand] + " [____________________]";
@@ -24,7 +24,7 @@ export class JourneyStatusHandler {
     }
 }
 
-export const TravelDescriptions = [
+const TravelDescriptions = [
     "the sound of tumbling wheels accompanies you.",
     "step by step. camel toe to camel toe.",
     "you look up. gaze at the vast nothing.",
@@ -36,7 +36,7 @@ export const TravelDescriptions = [
     "large mountain ranges reach for the sky."
 ]
 
-export const aJourney = [
+const aJourney = [
     "a dusty journey.",
     "a lonely jouney.",
     "a long journey.",

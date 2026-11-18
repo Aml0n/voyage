@@ -1,7 +1,7 @@
 import { createOptions, createEvent, OptionControllerManager, ContinueControllerManager } from "./scripts/eventsManager.js";
 import { Events } from "./scripts/events.js";
 import { PlayerStats } from "./scripts/playerStats.js";
-import { JourneyStatusHandler, TravelDescriptions, aJourney } from "./scripts/journeyStatusHandler.js";
+import JourneyStatusHandler from "./scripts/journeyStatusHandler.js";
 import { GameLossText, GameWinText } from "./scripts/gameOverText.js";
 
 const events = document.querySelector('#events')
@@ -10,11 +10,13 @@ const journeyStatus = document.querySelector('#status')
 
 const eventKeys = Object.keys(Events);
 
-const gameOverDiv1 = document.createElement('div');
+const gameOverDiv1 = document.createElement('div'); 
 const gameOverDiv2 = document.createElement('div');
 const gameOverDiv3 = document.createElement('div');
 
 const gameOverDivs = [gameOverDiv1, gameOverDiv2, gameOverDiv3]
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // let templateOptions = [
 //     'take his coins',
@@ -23,94 +25,68 @@ const gameOverDivs = [gameOverDiv1, gameOverDiv2, gameOverDiv3]
 //     'skibidi rizz ohio gyatt'
 // ]
 
-// createOptions(Events.dehydratedMan.options);
-// createEvent(Events.dehydratedMan.text);
-// createOptions(Events.dehydratedMan.options);
+export class Game {
 
-// refreshEvents()
+    static state = null;
+    static running = true;
 
-// events.replaceChildren();
+    static async beginRound() {
+        JourneyStatusHandler.initializeJourneyStatus(journeyStatus);
 
-function replaceFirstTwoChar(string, charToReplace, replacementChar) {
-    const firstString = string.replace(charToReplace, replacementChar);
-    return firstString.replace(charToReplace, replacementChar);
-};
+        const travelDescription = JourneyStatusHandler.createTravelDescription();
+        events.appendChild(travelDescription);
 
-export const Game = {
+        // TODO: implement a Player class and move all of the player stats logic there
+        // preferably to the updateStates function
+        await sleep(1000);
 
-    state: null,
+        for (let i = 0; i < 10; i++) {
+            if (PlayerStats.food < 2) {
+                PlayerStats.health -= 3;
+            } else {
+                PlayerStats.food -= 2;
+            }
 
-    roundBegin: function() {
-        if (PlayerStats.km >= 4000) {
-            Game.state = "win"
-            this.gameWin();
-        } else {
-            JourneyStatusHandler.initializeJourneyStatus(journeyStatus);
+            if (PlayerStats.water < 2) {
+                PlayerStats.health -= 4;
+            } else {
+                PlayerStats.water -= 2;
+            }
 
-            const travelDescription = document.createElement('div');
-            travelDescription.classList.add('event');
-            travelDescription.textContent = TravelDescriptions[Math.floor((Math.random() * TravelDescriptions.length))]
-            events.appendChild(travelDescription);
+            PlayerStats.days += 1;
+            PlayerStats.km += 20;
 
-            let loopConsume = setInterval(() => {
+            PlayerStats.updateStats(["food", "health", "water", "days", "km"]);
+            JourneyStatusHandler.updateJourneyStatus(journeyStatus);
 
-                if (PlayerStats.food < 2) {
-                    PlayerStats.health -= 3;
-                } else {
-                    PlayerStats.food -= 2;
-                };
-                
-                if (PlayerStats.water < 2) {
-                    PlayerStats.health -= 4;
-                } else {
-                    PlayerStats.water -= 2;
-                }
-                PlayerStats.days += 1;
-                PlayerStats.km += 20;
-                // console.log(`${PlayerStats.food}, ${PlayerStats.water}, ${PlayerStats.health}`)
-                PlayerStats.updateStats(["food", "health", "water", "days", "km"]);
-                JourneyStatusHandler.updateJourneyStatus(journeyStatus);
-
-                if (PlayerStats.health <= 0) {
-                    this.state = "loss";
-                    this.gameLost();
-                    clearInterval(loopConsume);
-                    clearTimeout(loopEnder);
-                }
-            }, 1000)
-            
-            let loopEnder = setTimeout(() => {
-                if (this.state === "loss") {
-                    this.gameLost();
-                } if (this.state === "win") {
-                    this.gameWin();
-                } else {
-                    clearInterval(loopConsume);
-                    const randNum = Math.floor(Math.random() * eventKeys.length);
-                    console.log(randNum)
-                    this.eventBegin(Events[eventKeys[randNum]]);  
-                }
-            }, 10000)
+            if (PlayerStats.health <= 0) {
+                this.state = "loss";
+                return;
+            } else {
+                await sleep(1000);
+            }
         }
+    }
 
-        
-
-    },
-
-    eventBegin: function(event) {
+    static async eventBegin(event) {
 
         journeyStatus.textContent = event.journeyText
         createEvent(event);
 
         if (event.textOnly === false) {
-            setTimeout(() => {
-                createOptions(event.options)
-            }, 3000);
-        };
+            await sleep(3000);
+            await createOptions(event.options);
+        }
 
-    },
+    }
 
-    gameLost: function() {
+    static async generateEvent() {
+        const randNum = Math.floor(Math.random() * eventKeys.length);
+        console.log(randNum)
+        await this.eventBegin(Events[eventKeys[randNum]]);
+    }
+
+    static gameLost() {
         let divNumber = 0;
         for (let div of gameOverDivs) {
             div.classList.add('event');
@@ -147,9 +123,9 @@ export const Game = {
         setTimeout(() => {
             events.appendChild(continueDiv);
         }, 2000);
-    },
+    }
 
-    gameWin: function() {
+    static gameWin() {
         let divNumber = 0;
         for (let div of gameOverDivs) {
             div.classList.add('event');
@@ -180,7 +156,9 @@ export const Game = {
                 }, 2000); 
             }
             
-        }, ContinueControllerManager.getSignal());
+            }, ContinueControllerManager.getSignal()
+        );
+
         events.appendChild(gameOverDiv1);
         whichDiv += 1;
         setTimeout(() => {
@@ -189,4 +167,15 @@ export const Game = {
     }
 }
 
-Game.roundBegin();
+async function main() {
+    while (Game.running) {
+        await Game.beginRound();
+        if (Game.state === "loss" || Game.state === "win") {
+            Game.running = false;
+        } else {
+            await Game.generateEvent();
+        }
+    }
+}
+
+main();
