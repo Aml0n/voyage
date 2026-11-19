@@ -216,6 +216,9 @@ export async function createEvent(event) {
         tempEvent.appendChild(statusChangesDiv);
         
         await sleep(1000);
-        createContinueButton();
+
+        // TODO: recreate createContinueButton function to wait for the player to click the continue button
+        // make it async
+        createContinueButton(); 
     };
 }

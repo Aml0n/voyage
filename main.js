@@ -71,7 +71,7 @@ export class Game {
     static async eventBegin(event) {
 
         journeyStatus.textContent = event.journeyText
-        createEvent(event);
+        await createEvent(event);
 
         if (event.textOnly === false) {
             await sleep(3000);
