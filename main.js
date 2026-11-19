@@ -1,11 +1,10 @@
-import { createOptions, createEvent, OptionControllerManager, ContinueControllerManager } from "./scripts/eventsManager.js";
+import { createOptions, createEvent, ContinueControllerManager } from "./scripts/eventsManager.js";
 import { Events } from "./scripts/events.js";
 import { PlayerStats } from "./scripts/playerStats.js";
 import JourneyStatusHandler from "./scripts/journeyStatusHandler.js";
 import { GameLossText, GameWinText } from "./scripts/gameOverText.js";
 
 const events = document.querySelector('#events')
-const eventList = [];
 const journeyStatus = document.querySelector('#status')
 
 const eventKeys = Object.keys(Events);
