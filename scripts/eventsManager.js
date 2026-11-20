@@ -56,21 +56,33 @@ export const ContinueControllerManager = {
     }
 };
 
-export function createContinueButton() {
+export async function createContinueButton() {
+
+    // create the continue button
     const continueDiv = document.createElement('div');
     continueDiv.classList.add('continue', 'player', 'clickable');
     continueDiv.textContent = "continue..."
 
+    // assign the click event listener to the continue button
     ContinueControllerManager.getController();
     continueDiv.addEventListener('click', () => {
-        events.replaceChildren();
-        ContinueControllerManager.abort();
-        Game.roundBegin();
+        
     }, ContinueControllerManager.getSignal());
+
+    // append it to the events div
     events.appendChild(continueDiv);
+
+    await new Promise(resolve => {
+        continueDiv.addEventListener('click', () => {
+            events.replaceChildren();
+            ContinueControllerManager.abort();
+            Game.roundBegin();
+            resolve();
+        }, ContinueControllerManager.getSignal());
+    });
 }
 
-export function createOptions(opts) {
+export async function createOptions(opts) {
     return new Promise(resolve => {
         OptionControllerManager.getController();
 
@@ -170,14 +182,10 @@ export async function optionOnClick(opt, optData) {
 
 
         effectDiv.appendChild(statDiv);
-
-        await sleep(delay);
-        createContinueButton();
-
-    } else {
-        await sleep(delay);
-        createContinueButton();
     }
+
+    await sleep(delay);
+    await createContinueButton();
 
 }
 
@@ -219,6 +227,6 @@ export async function createEvent(event) {
 
         // TODO: recreate createContinueButton function to wait for the player to click the continue button
         // make it async
-        createContinueButton(); 
+        await createContinueButton(); 
     };
 }
