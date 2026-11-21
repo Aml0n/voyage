@@ -1,5 +1,4 @@
 import { PlayerStats } from "./playerStats.js";
-import { Game } from "../main.js";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -56,7 +55,7 @@ export const ContinueControllerManager = {
     }
 };
 
-export async function createContinueButton() {
+export async function createContinueButton(events) {
 
     // create the continue button
     const continueDiv = document.createElement('div');
@@ -74,15 +73,14 @@ export async function createContinueButton() {
 
     await new Promise(resolve => {
         continueDiv.addEventListener('click', () => {
-            events.replaceChildren();
+            events.replaceChildren(); // clear the events div
             ContinueControllerManager.abort();
-            Game.roundBegin();
             resolve();
         }, ContinueControllerManager.getSignal());
     });
 }
 
-export async function createOptions(opts) {
+export async function createOptions(opts, events) {
     return new Promise(resolve => {
         OptionControllerManager.getController();
 
@@ -118,7 +116,7 @@ export async function createOptions(opts) {
             } else {
                 tempOpt.addEventListener('click', () => {
                     resolve();
-                    optionOnClick(tempOpt, opts[opt]);
+                    optionOnClick(tempOpt, opts[opt], events);
                 }, OptionControllerManager.getSignal());
             }
 
@@ -129,7 +127,7 @@ export async function createOptions(opts) {
     });
 }
 
-export async function optionOnClick(opt, optData) {
+export async function optionOnClick(opt, optData, events) {
     OptionControllerManager.abort();
 
     const optionParent = opt.parentNode;
@@ -185,11 +183,11 @@ export async function optionOnClick(opt, optData) {
     }
 
     await sleep(delay);
-    await createContinueButton();
+    await createContinueButton(events);
 
 }
 
-export async function createEvent(event) {
+export async function createEvent(event, events) {
     const tempEvent = document.createElement('div');
     tempEvent.classList.add('event');
     tempEvent.textContent = event.text;
@@ -227,6 +225,6 @@ export async function createEvent(event) {
 
         // TODO: recreate createContinueButton function to wait for the player to click the continue button
         // make it async
-        await createContinueButton(); 
+        await createContinueButton(events);
     };
 }

@@ -17,13 +17,6 @@ const gameOverDivs = [gameOverDiv1, gameOverDiv2, gameOverDiv3]
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// let templateOptions = [
-//     'take his coins',
-//     'give him water',
-//     'ignore him',
-//     'skibidi rizz ohio gyatt'
-// ]
-
 export class Game {
 
     static state = null;
@@ -70,11 +63,11 @@ export class Game {
     static async eventBegin(event) {
 
         journeyStatus.textContent = event.journeyText
-        await createEvent(event);
+        await createEvent(event, events);
 
         if (event.textOnly === false) {
             await sleep(3000);
-            await createOptions(event.options);
+            await createOptions(event.options, events);
         }
 
     }
@@ -157,7 +150,7 @@ export class Game {
             
             }, ContinueControllerManager.getSignal()
         );
-
+        
         events.appendChild(gameOverDiv1);
         whichDiv += 1;
         setTimeout(() => {
