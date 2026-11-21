@@ -1,4 +1,4 @@
-import { createOptions, createEvent } from "./scripts/eventsManager.js";
+import { EventsManager } from "./scripts/eventsManager.js";
 import { Events } from "./scripts/events.js";
 import { PlayerStats } from "./scripts/playerStats.js";
 import JourneyStatusHandler from "./scripts/journeyStatusHandler.js";
@@ -8,12 +8,6 @@ const events = document.querySelector('#events')
 const journeyStatus = document.querySelector('#status')
 
 const eventKeys = Object.keys(Events);
-
-// const gameOverDiv1 = document.createElement('div'); 
-// const gameOverDiv2 = document.createElement('div');
-// const gameOverDiv3 = document.createElement('div');
-
-// const gameOverDivs = [gameOverDiv1, gameOverDiv2, gameOverDiv3]
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -63,11 +57,11 @@ export class Game {
     static async eventBegin(event) {
 
         journeyStatus.textContent = event.journeyText
-        await createEvent(event, events);
+        await EventsManager.createEvent(event, events);
 
         if (event.textOnly === false) {
             await sleep(3000);
-            await createOptions(event.options, events);
+            await EventsManager.createOptions(event.options, events);
         }
 
     }
