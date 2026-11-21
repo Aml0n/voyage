@@ -102,6 +102,7 @@ export class Game {
                 setTimeout(() => {
                     events.appendChild(continueDiv);
                 }, 2000);
+                
 
             } else {
                 setTimeout(() => {
@@ -150,7 +151,7 @@ export class Game {
             
             }, ContinueControllerManager.getSignal()
         );
-        
+
         events.appendChild(gameOverDiv1);
         whichDiv += 1;
         setTimeout(() => {
@@ -168,6 +169,13 @@ async function main() {
             await Game.generateEvent();
         }
     }
+
+    if (Game.state === "loss") {
+        Game.gameLost();
+    } else if (Game.state === "win") {
+        Game.gameWin();
+    }
+
 }
 
 main();
