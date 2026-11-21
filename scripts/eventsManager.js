@@ -186,6 +186,7 @@ async function optionOnClick(optionElement, option, events) {
             PlayerStats[stat] += changeValue;
             PlayerStats.updateStats(stat);
             console.log(PlayerStats[stat])
+            console.log(`PlayerStats.${stat} updated to ${PlayerStats[stat]}`);
         }
 
 

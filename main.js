@@ -1,4 +1,4 @@
-import { createOptions, createEvent, ContinueControllerManager } from "./scripts/eventsManager.js";
+import { createOptions, createEvent } from "./scripts/eventsManager.js";
 import { Events } from "./scripts/events.js";
 import { PlayerStats } from "./scripts/playerStats.js";
 import JourneyStatusHandler from "./scripts/journeyStatusHandler.js";
@@ -9,11 +9,11 @@ const journeyStatus = document.querySelector('#status')
 
 const eventKeys = Object.keys(Events);
 
-const gameOverDiv1 = document.createElement('div'); 
-const gameOverDiv2 = document.createElement('div');
-const gameOverDiv3 = document.createElement('div');
+// const gameOverDiv1 = document.createElement('div'); 
+// const gameOverDiv2 = document.createElement('div');
+// const gameOverDiv3 = document.createElement('div');
 
-const gameOverDivs = [gameOverDiv1, gameOverDiv2, gameOverDiv3]
+// const gameOverDivs = [gameOverDiv1, gameOverDiv2, gameOverDiv3]
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -74,89 +74,98 @@ export class Game {
 
     static async generateEvent() {
         const randNum = Math.floor(Math.random() * eventKeys.length);
-        console.log(randNum)
+        console.log("event chosen: #" + randNum);
         await this.eventBegin(Events[eventKeys[randNum]]);
     }
 
-    static gameLost() {
-        let divNumber = 0;
-        for (let div of gameOverDivs) {
-            div.classList.add('event');
-            div.textContent = GameLossText[divNumber];
-            divNumber += 1; 
+    static async gameLost() {
+        console.log("game lost");
+        
+        let gameOverElements = [];
+        for (let i = 0; i < 3; i++) {
+            const gameOverTextContainer = document.createElement('div');
+            gameOverTextContainer.classList.add('event');
+            gameOverTextContainer.textContent = GameLossText[i];
+            gameOverElements.push(gameOverTextContainer);
         }
-
-        let whichDiv = 0;
+        
         journeyStatus.textContent = "an end.";
         events.replaceChildren();
+
         const continueDiv = document.createElement('div');
         continueDiv.classList.add('continue', 'player', 'clickable');
         continueDiv.textContent = "continue..."
-        continueDiv.addEventListener('click', () => {
-            events.appendChild(gameOverDivs[whichDiv]);
-            events.removeChild(continueDiv);
-            whichDiv += 1;
-            if (whichDiv === 3) {
-                ContinueControllerManager.abort();
-                continueDiv.textContent = "reload the page to try again...";
-                setTimeout(() => {
-                    events.appendChild(continueDiv);
-                }, 2000);
-                
 
-            } else {
-                setTimeout(() => {
-                    events.appendChild(continueDiv);
-                }, 2000); 
+        let count = 0;
+        for (let div of gameOverElements) {
+            events.appendChild(div);
+            await sleep(3000);
+
+            if (count == 2) {
+                continueDiv.textContent = "reload the page to try again...";
             }
-            
-        }, ContinueControllerManager.getSignal());
-        events.appendChild(gameOverDiv1);
-        whichDiv += 1;
-        setTimeout(() => {
+
             events.appendChild(continueDiv);
-        }, 2000);
+            
+            await new Promise(resolve => {
+                const continueHandler = () => {
+                    events.removeChild(div);
+                    events.removeChild(continueDiv);
+                    continueDiv.removeEventListener('click', continueHandler);
+                    resolve();
+                };
+                continueDiv.addEventListener('click', continueHandler);
+            });
+
+            count+=1;
+        }
+
+        window.location.reload();
     }
 
-    static gameWin() {
-        let divNumber = 0;
-        for (let div of gameOverDivs) {
-            div.classList.add('event');
-            div.textContent = GameWinText[divNumber];
-            divNumber += 1; 
+    static async gameWin() {
+        console.log("game won");
+
+        let gameOverElements = [];
+        for (let i = 0; i < 3; i++) {
+            const gameOverTextContainer = document.createElement('div');
+            gameOverTextContainer.classList.add('event');
+            gameOverTextContainer.textContent = GameWinText[i];
+            gameOverElements.push(gameOverTextContainer);
         }
 
-        let whichDiv = 0;
         journeyStatus.textContent = "an end.";
         events.replaceChildren();
+
         const continueDiv = document.createElement('div');
         continueDiv.classList.add('continue', 'player', 'clickable');
         continueDiv.textContent = "continue..."
-        continueDiv.addEventListener('click', () => {
-            events.appendChild(gameOverDivs[whichDiv]);
-            events.removeChild(continueDiv);
-            whichDiv += 1;
-            if (whichDiv === 3) {
-                ContinueControllerManager.abort();
-                continueDiv.textContent = "reload the page to play again...";
-                setTimeout(() => {
-                    events.appendChild(continueDiv);
-                }, 2000);
 
-            } else {
-                setTimeout(() => {
-                    events.appendChild(continueDiv);
-                }, 2000); 
+        let count = 0;
+        for (let div of gameOverElements) {
+            events.appendChild(div);
+            await sleep(3000);
+
+            if (count == 2) {
+                continueDiv.textContent = "reload the page to try again...";
             }
-            
-            }, ContinueControllerManager.getSignal()
-        );
 
-        events.appendChild(gameOverDiv1);
-        whichDiv += 1;
-        setTimeout(() => {
             events.appendChild(continueDiv);
-        }, 2000);
+            
+            await new Promise(resolve => {
+                const continueHandler = () => {
+                    events.removeChild(div);
+                    events.removeChild(continueDiv);
+                    continueDiv.removeEventListener('click', continueHandler);
+                    resolve();
+                };
+                continueDiv.addEventListener('click', continueHandler);
+            });
+
+            count+=1;
+        }
+
+        window.location.reload();
     }
 }
 
@@ -171,9 +180,9 @@ async function main() {
     }
 
     if (Game.state === "loss") {
-        Game.gameLost();
+        await Game.gameLost();
     } else if (Game.state === "win") {
-        Game.gameWin();
+        await Game.gameWin();
     }
 
 }
