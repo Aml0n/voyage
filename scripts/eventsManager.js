@@ -52,6 +52,53 @@ export class EventsManager {
             const optionIndexClass = 'option' + (options.indexOf(option) + 1);
             optionElement.classList.add('option', optionIndexClass);
 
+        if (optClickable === false) {
+            tempOpt.classList.add('unclickable');
+            totalUnclickables += 1;
+        } else {
+            tempOpt.addEventListener('click', () => optionOnClick(tempOpt, opts[opt]), OptionControllerManager.getSignal());
+        }
+
+        options.appendChild(tempOpt);
+        totalOptions += 1;
+    }
+    
+    if (totalOptions === totalUnclickables) {
+        const skip = document.createElement('div');
+        skip.classList.add('option')
+        options.appendChild(skip);
+        skip.addEventListener('click', () => skipEvent(skip), OptionControllerManager.getSignal())
+    }
+
+    events.appendChild(options);
+}
+
+export function skipEvent(skip) {
+    OptionControllerManager.abort();
+
+    const optionParent = opt.parentNode;
+    optionParent.remove();
+
+    const delay = 1500;
+
+    const playerDiv = document.createElement('div');
+    playerDiv.textContent = opt.textContent + ".";
+    playerDiv.classList.add('player', 'event');
+    events.appendChild(playerDiv);
+
+    const effectDiv = document.createElement('div');
+    effectDiv.textContent = "you somehow skip this interaction because jersev is a lazy dev and needs to do homework. :)"
+    effectDiv.classList.add('event');
+
+    setTimeout(() => {
+        events.appendChild(effectDiv);
+
+        setTimeout(() => {
+            createContinueButton();
+        }, delay);  
+
+    }, delay); 
+}
             optionsContainer.appendChild(optionElement);
         }
 
@@ -159,6 +206,9 @@ export class EventsManager {
                 }
 
                 statusChangesDiv.textContent += `${stat} ${statNumChange}. `;
+
+                PlayerStats[stat] += changeValue;
+                PlayerStats.updateStats(stat);
             }
 
             tempEvent.appendChild(statusChangesDiv);
