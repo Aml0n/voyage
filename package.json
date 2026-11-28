@@ -1,0 +1,21 @@
+{
+  "name": "voyage",
+  "version": "1.0.0",
+  "description": "there's a flourishing empire on the west end of this road and you're an eastern caravan merchant.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aml0n/voyage.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Aml0n/voyage/issues"
+  },
+  "homepage": "https://github.com/Aml0n/voyage#readme"
+}
