@@ -4,22 +4,22 @@ import { PlayerStats } from "./scripts/playerStats.js";
 import JourneyStatusHandler from "./scripts/journeyStatusHandler.js";
 import { GameLossText, GameWinText } from "./scripts/gameOverText.js";
 
-const events = document.querySelector('#events')
-const journeyStatus = document.querySelector('#status')
+const events = document.querySelector("#events");
+const journeyStatus = document.querySelector("#status");
 
 const eventKeys = Object.keys(Events);
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class Game {
-
     static state = null;
     static running = true;
 
     static async beginRound() {
         JourneyStatusHandler.initializeJourneyStatus(journeyStatus);
 
-        const travelDescription = JourneyStatusHandler.createTravelDescription();
+        const travelDescription =
+            JourneyStatusHandler.createTravelDescription();
         events.appendChild(travelDescription);
 
         // TODO: implement a Player class and move all of the player stats logic there
@@ -55,15 +55,8 @@ export class Game {
     }
 
     static async eventBegin(event) {
-
-        journeyStatus.textContent = event.journeyText
+        journeyStatus.textContent = event.journeyText;
         await EventsManager.createEvent(event, events);
-
-        if (event.textOnly === false) {
-            await sleep(3000);
-            await EventsManager.createOptions(event.options, events);
-        }
-
     }
 
     static async generateEvent() {
@@ -74,21 +67,21 @@ export class Game {
 
     static async gameLost() {
         console.log("game lost");
-        
+
         let gameOverElements = [];
         for (let i = 0; i < 3; i++) {
-            const gameOverTextContainer = document.createElement('div');
-            gameOverTextContainer.classList.add('event');
+            const gameOverTextContainer = document.createElement("div");
+            gameOverTextContainer.classList.add("event");
             gameOverTextContainer.textContent = GameLossText[i];
             gameOverElements.push(gameOverTextContainer);
         }
-        
+
         journeyStatus.textContent = "an end.";
         events.replaceChildren();
 
-        const continueDiv = document.createElement('div');
-        continueDiv.classList.add('continue', 'player', 'clickable');
-        continueDiv.textContent = "continue..."
+        const continueDiv = document.createElement("div");
+        continueDiv.classList.add("continue", "player", "clickable");
+        continueDiv.textContent = "continue...";
 
         let count = 0;
         for (let div of gameOverElements) {
@@ -100,18 +93,16 @@ export class Game {
             }
 
             events.appendChild(continueDiv);
-            
-            await new Promise(resolve => {
+
+            await new Promise((resolve) => {
                 const continueHandler = () => {
-                    events.removeChild(div);
-                    events.removeChild(continueDiv);
-                    continueDiv.removeEventListener('click', continueHandler);
+                    continueDiv.removeEventListener("click", continueHandler);
                     resolve();
                 };
-                continueDiv.addEventListener('click', continueHandler);
+                continueDiv.addEventListener("click", continueHandler);
             });
 
-            count+=1;
+            count += 1;
         }
 
         window.location.reload();
@@ -122,8 +113,8 @@ export class Game {
 
         let gameOverElements = [];
         for (let i = 0; i < 3; i++) {
-            const gameOverTextContainer = document.createElement('div');
-            gameOverTextContainer.classList.add('event');
+            const gameOverTextContainer = document.createElement("div");
+            gameOverTextContainer.classList.add("event");
             gameOverTextContainer.textContent = GameWinText[i];
             gameOverElements.push(gameOverTextContainer);
         }
@@ -131,9 +122,9 @@ export class Game {
         journeyStatus.textContent = "an end.";
         events.replaceChildren();
 
-        const continueDiv = document.createElement('div');
-        continueDiv.classList.add('continue', 'player', 'clickable');
-        continueDiv.textContent = "continue..."
+        const continueDiv = document.createElement("div");
+        continueDiv.classList.add("continue", "player", "clickable");
+        continueDiv.textContent = "continue...";
 
         let count = 0;
         for (let div of gameOverElements) {
@@ -145,18 +136,18 @@ export class Game {
             }
 
             events.appendChild(continueDiv);
-            
-            await new Promise(resolve => {
+
+            await new Promise((resolve) => {
                 const continueHandler = () => {
                     events.removeChild(div);
                     events.removeChild(continueDiv);
-                    continueDiv.removeEventListener('click', continueHandler);
+                    continueDiv.removeEventListener("click", continueHandler);
                     resolve();
                 };
-                continueDiv.addEventListener('click', continueHandler);
+                continueDiv.addEventListener("click", continueHandler);
             });
 
-            count+=1;
+            count += 1;
         }
 
         window.location.reload();
@@ -178,7 +169,6 @@ async function main() {
     } else if (Game.state === "win") {
         await Game.gameWin();
     }
-
 }
 
 main();

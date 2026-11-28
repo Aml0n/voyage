@@ -7,32 +7,35 @@ export class EventsManager {
     static optionControllerManager = new OptionControllerManager();
 
     static sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
     static async createContinueButton(events) {
-        const continueDiv = document.createElement('div');
-        continueDiv.classList.add('continue', 'player', 'clickable');
-        continueDiv.textContent = "continue..."
+        const continueDiv = document.createElement("div");
+        continueDiv.classList.add("continue", "player", "clickable");
+        continueDiv.textContent = "continue...";
         events.appendChild(continueDiv);
 
-        await new Promise(resolve => {
-            continueDiv.addEventListener('click', () => {
-                events.replaceChildren();
-                this.continueControllerManager.abort();
-                resolve();
-            }, this.continueControllerManager.getSignal());
+        await new Promise((resolve) => {
+            continueDiv.addEventListener(
+                "click",
+                () => {
+                    events.replaceChildren();
+                    this.continueControllerManager.abort();
+                    resolve();
+                },
+                this.continueControllerManager.getSignal(),
+            );
         });
     }
 
-    static #isOptionClickable(opt) {
+    static #isOptionClickable(option) {
         let isClickable = true;
-        if (opt.statusChanges.length > 0) {
-
-            for (const change of opt.statusChanges) {
+        if (option.statusChanges.length > 0) {
+            for (const change of option.statusChanges) {
                 const stat = change[0];
 
-                if ((PlayerStats[stat] + change[1]) < 0) {
+                if (PlayerStats[stat] + change[1] < 0) {
                     isClickable = false;
                     break;
                 }
@@ -42,36 +45,95 @@ export class EventsManager {
     }
 
     static async createOptions(options, events) {
+
+        console.log("creating options...");
+
         const optionsContainer = document.createElement("div");
-        optionsContainer.classList.add('event', 'options', 'player');
+        optionsContainer.classList.add("event", "options", "player");
 
+        let totalUnavailable = 0;
         for (const option of options) {
-            const optionElement = document.createElement('div');
-            optionElement.textContent = option.text;
-
-            const optionIndexClass = 'option' + (options.indexOf(option) + 1);
-            optionElement.classList.add('option', optionIndexClass);
-
-            optionsContainer.appendChild(optionElement);
+            if (this.#isOptionClickable(option) === false)
+                totalUnavailable += 1;
         }
 
-        events.appendChild(optionsContainer);
 
-        await new Promise(resolve => {
-            for (const option of options) {
-                const optionIndexClass = 'option' + (options.indexOf(option) + 1);
-                const optionElement = optionsContainer.querySelector(`.${optionIndexClass}`);
+        // TODO: refactor to use less tabs
+        await new Promise((resolve) => {
 
-                if (!this.#isOptionClickable(option)) {
-                    optionElement.classList.add('unclickable');
-                } else {
-                    optionElement.addEventListener('click', async () => {
-                        await this.optionOnClick(optionElement, option, events);
+            console.log("inside promise for creating options...");
+
+            if (totalUnavailable === options.length) {
+                const skipButton = document.createElement("div");
+                skipButton.textContent =
+                    "skip this event (no options available)";
+                skipButton.classList.add("option");
+                optionsContainer.appendChild(skipButton);
+
+                skipButton.addEventListener(
+                    "click",
+                    async () => {
+                        await this.skipEvent(skipButton, events);
+                        this.optionControllerManager.abort();
                         resolve();
-                    }, this.optionControllerManager.getSignal());
+                    },
+                    this.optionControllerManager.getSignal(),
+                );
+            } else {
+                for (const option of options) {
+                    const optionDiv = document.createElement("div");
+                    optionDiv.textContent = option.text;
+                    optionDiv.classList.add("option", "option" + (options.indexOf(option) + 1));
+                    optionsContainer.appendChild(optionDiv);
+
+                    if (!this.#isOptionClickable(option)) {
+                        optionDiv.classList.add("unclickable");
+                    } else {
+                        optionDiv.addEventListener(
+                            "click",
+                            async () => {
+                                await this.optionOnClick(
+                                    optionDiv,
+                                    option,
+                                    events,
+                                );
+                                resolve();
+                            },
+                            this.optionControllerManager.getSignal(),
+                        );
+                    }
                 }
             }
+
+            events.appendChild(optionsContainer);
         });
+    }
+
+    static async skipEvent(skipButton, eventsContainer) {
+        OptionControllerManager.abort();
+
+        const optionsParentContainer = skipButton.parentNode;
+        optionsParentContainer.remove();
+
+        const delay = 1500;
+
+        const playerDiv = document.createElement("div");
+        playerDiv.textContent = skipButton.textContent + ".";
+        playerDiv.classList.add("player", "event");
+        eventsContainer.appendChild(playerDiv);
+
+        const effectDiv = document.createElement("div");
+        effectDiv.textContent =
+            "you somehow skip this interaction because jersev is a lazy dev and needs to do homework. :)";
+        effectDiv.classList.add("event");
+
+        setTimeout(() => {
+            eventsContainer.appendChild(effectDiv);
+
+            setTimeout(() => {
+                this.createContinueButton(eventsContainer);
+            }, delay);
+        }, delay);
     }
 
     static async optionOnClick(optionElement, option, events) {
@@ -80,9 +142,9 @@ export class EventsManager {
         const optionParent = optionElement.parentNode;
         optionParent.remove();
 
-        const playerDiv = document.createElement('div');
+        const playerDiv = document.createElement("div");
         playerDiv.textContent = optionElement.textContent + ".";
-        playerDiv.classList.add('player', 'event');
+        playerDiv.classList.add("player", "event");
         events.appendChild(playerDiv);
 
         const delay = 1500;
@@ -91,8 +153,9 @@ export class EventsManager {
 
         const effect = option.effect;
         const effectDiv = document.createElement("div");
-        effectDiv.textContent = typeof effect === "string" ? effect : JSON.stringify(effect);
-        effectDiv.classList.add('event');
+        effectDiv.textContent =
+            typeof effect === "string" ? effect : JSON.stringify(effect);
+        effectDiv.classList.add("event");
         events.appendChild(effectDiv);
 
         const statusChanges = option.statusChanges;
@@ -100,8 +163,8 @@ export class EventsManager {
         if (statusChanges.length > 0) {
             await this.sleep(delay);
 
-            const statDiv = document.createElement('div');
-            statDiv.classList.add('statChange');
+            const statDiv = document.createElement("div");
+            statDiv.classList.add("statChange");
 
             for (let change of statusChanges) {
                 const stat = change[0];
@@ -122,7 +185,9 @@ export class EventsManager {
                 PlayerStats[stat] += changeValue;
                 PlayerStats.updateStats(stat);
                 console.log(PlayerStats[stat]);
-                console.log(`PlayerStats.${stat} updated to ${PlayerStats[stat]}`);
+                console.log(
+                    `PlayerStats.${stat} updated to ${PlayerStats[stat]}`,
+                );
             }
 
             effectDiv.appendChild(statDiv);
@@ -132,17 +197,17 @@ export class EventsManager {
         await this.createContinueButton(events);
     }
 
-    static async createEvent(event, events) {
-        const tempEvent = document.createElement('div');
-        tempEvent.classList.add('event');
-        tempEvent.textContent = event.text;
-        events.appendChild(tempEvent);
+    static async createEvent(event, eventsContainer) {
+        const eventDiv = document.createElement("div");
+        eventDiv.classList.add("event");
+        eventDiv.textContent = event.text;
+        eventsContainer.appendChild(eventDiv);
 
         if (event.statusChanges.length > 0) {
             await this.sleep(3000);
 
-            const statusChangesDiv = document.createElement('div');
-            statusChangesDiv.classList.add('statChange');
+            const statusChangesDiv = document.createElement("div");
+            statusChangesDiv.classList.add("statChange");
 
             for (let change of event.statusChanges) {
                 const stat = change[0];
@@ -160,11 +225,15 @@ export class EventsManager {
 
                 statusChangesDiv.textContent += `${stat} ${statNumChange}. `;
             }
+            eventDiv.appendChild(statusChangesDiv);
+        }
 
-            tempEvent.appendChild(statusChangesDiv);
+        await this.sleep(3000);
 
-            await this.sleep(1000);
-            await this.createContinueButton(events);
-        };
+        if (!event.textOnly) {
+            await this.createOptions(event.options, eventsContainer);
+        } else {
+            await this.createContinueButton(eventsContainer);
+        }
     }
 }
