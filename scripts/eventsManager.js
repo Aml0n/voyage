@@ -224,9 +224,6 @@ export class EventsManager {
                 }
 
                 statusChangesDiv.textContent += `${stat} ${statNumChange}. `;
-
-                PlayerStats[stat] += changeValue;
-                PlayerStats.updateStats(stat);
             }
             eventDiv.appendChild(statusChangesDiv);
         }
